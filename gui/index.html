@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="en" dir="ltr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Abdulwahhab Vina Workflow</title>
+<style>
+
+:root{--bg:#0e1424;--card:#171f36;--card2:#1d2745;--line:#2a3558;--tx:#e8ecf8;--mut:#8f9bc0;--ac:#5b8cff;--ac2:#8b5cf6;--ok:#2ecc9a;--bad:#ff6b7a;--warn:#ffc15a}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(1200px 600px at 80% -10%,#1b2a5a55,transparent),var(--bg);color:var(--tx);font-family:"Segoe UI",Tahoma,Arial,sans-serif;line-height:1.6}
+header{padding:22px 32px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--line)}
+.logo{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--ac),var(--ac2));display:grid;place-items:center;font-weight:800;font-size:20px}
+h1{font-size:20px;margin:0}header small{color:var(--mut);display:block;font-size:12px}
+main{max-width:1180px;margin:24px auto;padding:0 20px;display:grid;grid-template-columns:420px 1fr;gap:20px}
+@media(max-width:900px){main{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px}
+.card h2{font-size:15px;margin:0 0 14px;color:#cfd8ff}
+label{display:block;font-size:13px;color:var(--mut);margin:12px 0 5px}
+input,textarea,select{width:100%;background:var(--card2);border:1px solid var(--line);color:var(--tx);border-radius:10px;padding:10px 12px;font:inherit;outline:none}
+input:focus,textarea:focus{border-color:var(--ac)}
+textarea{min-height:150px;font-family:Consolas,monospace;font-size:12px;direction:ltr;text-align:left}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn{border:0;border-radius:12px;padding:12px 18px;font:inherit;font-weight:700;cursor:pointer;color:#fff;background:linear-gradient(135deg,var(--ac),var(--ac2))}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:var(--card2);border:1px solid var(--line);color:var(--tx);font-weight:500;padding:7px 12px;font-size:12px}
+.btn.stop{background:var(--bad)}
+.chk{display:flex;gap:8px;align-items:center;margin-top:12px;font-size:13px;color:var(--mut)}.chk input{width:auto}
+.bar{height:10px;border-radius:99px;background:var(--card2);overflow:hidden;margin:10px 0}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ac),var(--ac2));transition:none}
+.badge{display:inline-block;padding:3px 10px;border-radius:99px;font-size:12px;font-weight:700}
+.b-run{background:#5b8cff33;color:var(--ac)}.b-ok{background:#2ecc9a33;color:var(--ok)}.b-bad{background:#ff6b7a33;color:var(--bad)}.b-warn{background:#ffc15a33;color:var(--warn)}
+pre{background:#0a0f1e;border:1px solid var(--line);border-radius:10px;padding:12px;max-height:230px;overflow:auto;font-size:12px;direction:ltr;text-align:left;margin:8px 0 0;white-space:pre-wrap}
+table{width:100%;border-collapse:collapse;font-size:13px;direction:ltr}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left}th{color:var(--mut);font-weight:600;position:sticky;top:0;background:var(--card)}
+tr:hover td{background:var(--card2)}.sc{font-weight:700;color:var(--ok)}
+.note{font-size:12px;color:var(--mut);margin-top:10px}
+.alert{border-radius:12px;padding:12px 14px;font-size:13px;margin-bottom:12px}
+.a-ok{background:#2ecc9a1f;border:1px solid #2ecc9a66}.a-bad{background:#ff6b7a1f;border:1px solid #ff6b7a66}.a-warn{background:#ffc15a1f;border:1px solid #ffc15a66}
+.kv{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.kv div{background:var(--card2);border-radius:10px;padding:10px}.kv b{display:block;font-size:18px}.kv span{font-size:11px;color:var(--mut)}
+.scroll{max-height:380px;overflow:auto}
+.hide{display:none}
+.drop{border:1px dashed var(--line);border-radius:10px;padding:10px;background:var(--card2)}
+.clist{max-height:200px;overflow:auto;margin-top:10px}
+.crow{display:flex;gap:8px;align-items:center;padding:6px 8px;border-bottom:1px solid var(--line);font-size:12px}
+.crow .n{font-weight:600;min-width:90px}.crow .s{flex:1;font-family:Consolas,monospace;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.crow .x{cursor:pointer;color:var(--bad);border:0;background:none;font-size:16px}
+.crow.bad{background:#ff6b7a14}.crow .m{font-size:11px;color:var(--warn);flex-basis:100%}
+.crow{flex-wrap:wrap}
+.crow .t{width:110px;height:75px;background:#fff;border-radius:6px;overflow:hidden;flex:none}.crow .t svg{width:110px;height:75px}
+.crow .w{flex-basis:100%;font-size:11px;color:var(--warn)}.crow .a{font-size:11px;color:var(--tx);display:flex;gap:6px;align-items:center;flex-basis:100%}.crow .a input{width:auto}
+.crow.warn{background:#ffc15a12}.clist{max-height:640px}
+table.ch td,table.ch th{font-size:12px;position:static!important}table.ch{margin:6px 0}
+
+main{display:block;max-width:none;margin:0;padding:0}
+.app{display:grid;grid-template-columns:230px 1fr;min-height:calc(100vh - 76px)}
+@media(max-width:900px){.app{grid-template-columns:1fr}}
+nav{background:#0b1120;border-right:1px solid var(--line);padding:16px 10px}
+nav button{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:0;color:var(--mut);padding:10px 12px;border-radius:10px;font:inherit;cursor:pointer;margin-bottom:2px}
+nav button:hover{background:var(--card)}nav button.on{background:var(--card2);color:var(--tx);font-weight:600}
+nav .num{width:24px;height:24px;border-radius:50%;background:var(--line);display:grid;place-items:center;font-size:12px;flex:none}
+nav button.on .num{background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff}nav button.done .num{background:var(--ok);color:#06251b}
+nav hr{border:0;border-top:1px solid var(--line);margin:12px 6px}
+.page{padding:22px 26px;max-width:1250px}.page.hide{display:none}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:1100px){.grid2{grid-template-columns:1fr}}
+.viewer{width:100%;height:440px;position:relative;border:1px solid var(--line);border-radius:12px;background:#0a0f1e;overflow:hidden}
+.pillbar{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.pill{padding:6px 12px;border-radius:999px;border:1px solid var(--line);background:var(--card2);cursor:pointer;font-size:12.5px;color:var(--tx)}
+.pill.on{border-color:var(--ac);background:#2b3f7a}
+.sug{border:1px solid #5b8cff77;background:#5b8cff18;border-radius:12px;padding:12px;margin:10px 0;font-size:13px}
+.pk{border:1px solid var(--line);border-radius:12px;padding:10px;margin:8px 0;background:var(--card2);font-size:12.5px;cursor:pointer}.pk.on{border-color:var(--ac)}
+.tabs{display:flex;gap:6px;margin:10px 0}.tabs .pill{border-radius:8px}
+.svgbox{background:#fff;border-radius:12px;overflow:auto;text-align:center}.svgbox svg{max-width:100%;height:auto}
+code{background:var(--card2);padding:1px 6px;border-radius:5px}
+.guide h3{margin:18px 0 6px;color:#cfd8ff}.guide li{margin:4px 0}.guide p{margin:6px 0}
+.setgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.hint{font-size:11.5px;color:var(--mut);margin-top:3px}
+table.res tr.sel td{background:#2b3f7a55}table.res tr{cursor:pointer}
+.err{white-space:pre-wrap}
+</style></head><body>
+<header><div class="logo">A</div><div><h1>Abdulwahhab Vina Workflow</h1><small>Validated AutoDock Vina docking | runs entirely on your computer | <span id="verlbl"></span></small></div></header>
+<div class="app">
+<nav>
+ <button data-p="p1" class="on"><span class="num">1</span>Protein</button>
+ <button data-p="p2"><span class="num">2</span>Compounds</button>
+ <button data-p="p3"><span class="num">3</span>Validate &amp; box</button>
+ <button data-p="p4"><span class="num">4</span>Run</button>
+ <button data-p="p5"><span class="num">5</span>Results</button>
+ <hr>
+ <button data-p="pg"><span class="num">?</span>Guide</button>
+ <button data-p="ps"><span class="num">&#9881;</span>Settings</button>
+ <button data-p="pa"><span class="num">i</span>About</button>
+</nav>
+<main>
+
+<section class="page" id="p1"><div class="card">
+ <h2>1. Protein</h2>
+ <div class="row"><div><label>PDB ID (4 characters)</label><input id="pdb" value="" maxlength="4" placeholder="e.g. 3PTB"></div>
+ <div><label>or upload a .pdb file</label><input type="file" id="pdbfile" accept=".pdb,.ent"></div></div>
+ <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="insp" type="button">Load and inspect structure</button>
+ <button class="btn ghost" id="exall" type="button">Load the ready example (trypsin 3PTB + 6 compounds)</button></div>
+ <div id="chbox" class="note"></div>
+ <div id="sug"></div>
+ <div id="v1" class="viewer hide" style="margin-top:12px"></div>
+ <div class="note">Protein preparation is automatic: only protein atoms are kept (water, ions and cofactors are removed), hydrogens are added at the pH set in Settings, and chains you do not tick are removed. Check that your site does not need a removed cofactor or metal.</div>
+ <div style="margin-top:12px"><button class="btn" data-go="p2">Next: compounds</button></div>
+</div></section>
+
+<section class="page hide" id="p2"><div class="card">
+ <h2>2. Compounds (one or many)</h2>
+  <div class="drop">
+    <label style="margin-top:0">Paste a SMILES, or lines like <code>name,SMILES</code> (a pasted MOL/SDF/MOL2 block also works)</label>
+    <textarea id="lib" placeholder="Benzamidine,NC(=N)c1ccccc1"></textarea>
+    <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" id="addtxt" type="button">Add pasted text</button>
+    <button class="btn ghost" id="ex" type="button">Load example compounds</button></div>
+    <label>or upload files: .mol .mol2 .sdf .smi .csv .txt (several files, and multi-molecule SDF/MOL2, are fine)</label>
+    <input type="file" id="files" multiple accept=".mol,.mol2,.sdf,.sd,.smi,.smiles,.csv,.tsv,.txt">
+  </div>
+  <div class="note" id="cinfo">No compounds added yet.</div>
+  <div class="clist" id="clist"></div>
+  <div style="margin-top:8px"><button class="btn ghost" id="clear" type="button">Clear list</button></div>
+  <div class="note">Ligand preparation is automatic: 3D start structures are built from the SMILES (RDKit ETKDG + MMFF), then converted for docking with Meeko. 3D coordinates inside MOL/MOL2/SDF files are not used. Salts and multi-fragment entries are rejected, not edited. Protonation states and tautomers are used exactly as written.</div>
+  <div style="margin-top:12px"><button class="btn" data-go="p3">Next: validate &amp; box</button></div>
+</div></section>
+
+<section class="page hide" id="p3"><div class="grid2">
+ <div class="card"><h2>3. Validate &amp; choose the box</h2>
+  <label>How should the docking box be defined?</label>
+  <div class="pillbar" id="bm">
+   <span class="pill on" data-m="cocrystal">Co-crystal ligand</span><span class="pill" data-m="residues">Click residues in 3D</span>
+   <span class="pill" data-m="pocket">Pocket detection</span><span class="pill" data-m="manual">Manual coordinates</span></div>
+  <div id="bm_cocrystal"><label>Ligand ID in the structure (1-3 characters, e.g. BEN)</label><input id="lig" maxlength="3" placeholder="auto-filled when found">
+   <div class="note">Validation: the program re-docks this known ligand and compares it with the crystal pose. RMSD must be under the limit in Settings (default 2 &Aring;). If it fails, docking stops, on purpose.</div></div>
+  <div id="bm_residues" class="hide"><div class="note">Click residues on the protein in the 3D view to add or remove them. The box is built around them.</div><div id="selres" class="pillbar"></div>
+   <button class="btn ghost" id="clrres" type="button">Clear selection</button></div>
+  <div id="bm_pocket" class="hide"><div class="note">Geometric pocket detection (largest buried cavities). It is a suggestion: check it visually.</div><div id="pklist"></div></div>
+  <div id="bm_manual" class="hide"><div class="row"><div><label>Centre X, Y, Z</label><input id="mc" placeholder="-1.8, 14.3, 16.7"></div><div><label>Size X, Y, Z (&Aring;)</label><input id="ms" placeholder="22, 22, 22"></div></div></div>
+  <div style="margin-top:10px"><button class="btn ghost" id="prevbox" type="button">Preview box in 3D</button></div>
+  <div id="boxinfo" class="note"></div>
+  <label>Reference compound SMILES (only if the structure has no bound ligand)</label><input id="ref" placeholder="optional">
+  <div class="chk"><input type="checkbox" id="unv"><span>Continue anyway if validation fails or is impossible (exploratory, results are labelled UNVALIDATED)</span></div>
+  <div style="margin-top:12px"><button class="btn" data-go="p4">Next: run</button></div>
+ </div>
+ <div class="card"><h2>3D view</h2><div id="v3" class="viewer"></div>
+  <div class="note">Cartoon = protein, sticks = bound ligand, green box = docking box. Rotate with the mouse, scroll to zoom.</div></div>
+</div></section>
+
+<section class="page hide" id="p4"><div class="card">
+ <h2>4. Run</h2>
+ <div id="summary" class="note"></div>
+ <div style="margin:12px 0;display:flex;gap:10px"><button class="btn" id="go">Start docking</button><button class="btn stop hide" id="stop">Stop</button></div>
+ <div class="alert a-bad hide" id="errbox"></div>
+ <h2>Progress <span id="st" class="badge b-warn">Ready</span></h2>
+ <div class="bar"><i id="pb"></i></div><div class="note" id="pt">No run started yet.</div>
+ <details><summary class="note" style="cursor:pointer">Technical log</summary><pre id="log">-</pre></details>
+</div></section>
+
+<section class="page hide" id="p5"><div class="card" id="resc">
+ <h2>5. Results</h2><div id="noresult" class="note">No results yet. Run a docking first.</div>
+ <div id="resbody" class="hide">
+ <div id="valbox"></div><div class="kv" id="kv"></div>
+ <div class="scroll" style="max-height:230px"><table id="tbl" class="res"></table></div>
+ <div style="margin:12px 0;display:flex;gap:8px;flex-wrap:wrap"><a id="zip"><button class="btn">Download all outputs (ZIP)</button></a>
+  <a id="fcsv"><button class="btn ghost">Table (CSV)</button></a><a id="fpdb"><button class="btn ghost">Best poses (PDB)</button></a><a id="frep"><button class="btn ghost">Report</button></a></div>
+ <div class="grid2" style="margin-top:8px">
+  <div><h2 id="vt">Select a compound</h2><div class="pillbar" id="poselist"></div><div id="v5" class="viewer"></div>
+   <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" id="png3d" type="button">Save 3D image (PNG)</button><button class="btn ghost" id="posepdb" type="button">Save this pose (PDB)</button><label style="margin:0;display:flex;gap:6px;align-items:center"><input type="checkbox" id="surf" style="width:auto">pocket surface</label></div></div>
+  <div><h2>2D interaction diagram</h2><div class="svgbox" id="d2"><div class="note" style="padding:20px;color:#555">Select a compound.</div></div>
+   <div style="margin-top:8px;display:flex;gap:8px"><button class="btn ghost" id="svgdl" type="button">Save diagram (SVG)</button><button class="btn ghost" id="pngdl" type="button">Save diagram (PNG)</button></div>
+   <div class="note" id="inote"></div></div>
+ </div></div>
+</div></section>
+
+<section class="page hide guide" id="pg"><div class="card">
+ <h2>Quick guide</h2>
+ <p><button class="btn" id="exall2" type="button">Load the ready example and go to Run</button> <button class="btn ghost" id="selftest" type="button">Run stability check (known protein)</button></p>
+ <div id="stres" class="note"></div>
+ <h3>What this program does</h3>
+ <p>It docks small molecules into a protein with AutoDock Vina. Before it docks your compounds, it checks that the settings can reproduce a known answer (re-docking of the crystal ligand). Then it ranks poses using several criteria, not only the Vina score.</p>
+ <h3>Five steps</h3>
+ <ol>
+  <li><b>Protein</b>: type a PDB ID (or upload a file) and press Load. If there are several chains, a suggestion is shown with its reason. You confirm or change it.</li>
+  <li><b>Compounds</b>: paste SMILES, or upload MOL / MOL2 / SDF / SMI / CSV files. Check the structure drawings and accept or remove warnings.</li>
+  <li><b>Validate &amp; box</b>: choose how the box is defined (co-crystal ligand, click residues, pocket detection, or manual coordinates) and preview it in 3D.</li>
+  <li><b>Run</b>: press Start. A small test takes minutes; large libraries take longer. Higher exhaustiveness is slower and more thorough.</li>
+  <li><b>Results</b>: click a compound to see its poses in 3D and the 2D interaction diagram. Export tables, poses and images.</li>
+ </ol>
+ <h3>How to read the result</h3>
+ <ul><li>Vina affinity (kcal/mol): more negative is better, but it is an estimate, not a measured binding energy. Do not compare across different proteins.</li>
+ <li>"Validation passed" means redocking gave RMSD under the limit. It supports, but does not prove, that docking is reliable for your compounds.</li>
+ <li>Composite score and shortlist are a heuristic to help human review. Look at the poses before trusting them.</li></ul>
+ <h3>If something goes wrong</h3>
+ <ul><li>Validation failed: check the chain choice and the box, or use another structure. Do not trust results from a failed validation.</li>
+ <li>Structure did not download: check the internet, or upload the .pdb file.</li>
+ <li>A compound is rejected: fix the structure (single molecule, valid atoms) and add it again.</li>
+ <li>Anything unclear: open Run &gt; Technical log and send it to your instructor.</li></ul>
+ <p class="note">Your files stay on this computer. Runs are saved in <code>AbdulwahhabVinaWorkflow\runs</code> in your user folder. Internet is only used to download PDB files and to check for updates.</p>
+</div></section>
+
+<section class="page hide" id="ps"><div class="card">
+ <h2>Settings</h2><div class="setgrid" id="setgrid"></div>
+ <div style="margin-top:14px;display:flex;gap:8px"><button class="btn" id="saveset">Save settings</button><button class="btn ghost" id="resetset">Restore defaults</button></div>
+ <div id="setmsg" class="note"></div>
+ <h2 style="margin-top:22px">Updates</h2><div class="note">The app checks the project release page when you press the button (nothing is installed automatically).</div>
+ <button class="btn ghost" id="upd" type="button">Check for updates</button><div id="updres" class="note"></div>
+</div></section>
+
+<section class="page hide guide" id="pa"><div class="card"><h2>About</h2><div id="aboutbody" class="note">Loading...</div></div></section>
+</main></div>
+<script src="/vendor/3Dmol-min.js"></script>
+<script>
+const $=id=>document.getElementById(id);let jid=null,timer=null,comps=[],chains=[],cinfo=null,pdbText=null,boxM='cocrystal',selRes=new Set(),boxRes=null,pockIdx=1,curComp=null,curPose=1,poseData=null,recText=null,diagData=null,v1=null,v3=null,v5=null,structCache=null;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const J=async(u,b)=>{const r=await fetch(u,b===undefined?{}:{method:'POST',body:JSON.stringify(b)});let j={};try{j=await r.json()}catch(e){}return {ok:r.ok,j}};
+function goto(p){document.querySelectorAll('.page').forEach(x=>x.classList.toggle('hide',x.id!==p));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===p));
+ if(p==='p3')enterP3();if(p==='p4')summary();if(p==='pa')loadAbout();if(p==='ps')loadSettings()}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>goto(b.dataset.p));
+document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>goto(b.dataset.go));
+function renderC(){
+  const ok=comps.filter(c=>c.level==='ok').length,w=comps.filter(c=>c.level==='warn'),acc=w.filter(c=>c.accepted).length,rej=comps.filter(c=>c.level==='reject').length;
+  $('cinfo').innerHTML=comps.length?`${ok} passed all checks, ${w.length} need your review (${acc} accepted), ${rej} rejected (not docked). The checks catch some input problems; they do not verify the chemistry. Please look at each structure.`+(w.length-acc?` <button class="btn ghost" id="accall" type="button">I reviewed all, accept all warnings</button>`:''):'No compounds added yet.';
+  if($('accall'))$('accall').onclick=()=>{comps.forEach(c=>{if(c.level==='warn')c.accepted=true});renderC()};
+  $('clist').innerHTML=comps.map((c,i)=>`<div class="crow ${c.level==='reject'?'bad':c.level==='warn'?'warn':''}">${c.svg?`<span class="t">${c.svg}</span>`:''}<span class="n">${esc(c.name)}</span><span class="s">${c.level!=='reject'?esc(c.smiles):'REJECTED'}</span><button class="x" data-i="${i}" title="remove">&times;</button>${c.note?`<span class="m">${esc(c.source)}: ${esc(c.note)}</span>`:''}${(c.warnings||[]).map(x=>`<span class="w">&#9888; ${esc(x)}</span>`).join('')}${c.level==='warn'?`<label class="a"><input type="checkbox" data-a="${i}" ${c.accepted?'checked':''}> I reviewed this structure and accept the warning(s)</label>`:''}</div>`).join('');
+  document.querySelectorAll('.x').forEach(b=>b.onclick=()=>{comps.splice(+b.dataset.i,1);renderC()});
+  document.querySelectorAll('[data-a]').forEach(b=>b.onchange=()=>{comps[+b.dataset.a].accepted=b.checked;renderC()});
+}
+function addRows(rows){
+  for(const r of rows){let n=r.name,k=2;while(comps.some(c=>c.name===n)){n=r.name+'_'+k++}r.name=n;comps.push(r)}
+  renderC();
+}
+async function parse(body){
+  const r=await fetch('/api/parse',{method:'POST',body:JSON.stringify(body)});const j=await r.json();
+  if(!r.ok){alert(j.error);return}addRows(j.compounds);
+}
+$('addtxt').onclick=async()=>{const t=$('lib').value;if(!t.trim())return;await parse({text:t});$('lib').value=''};
+$('ex').onclick=async()=>{const t=(await (await fetch('/api/example')).json()).library;await parse({text:t})};
+$('files').onchange=async e=>{
+  const fs=[];for(const f of e.target.files)fs.push({name:f.name,text:await f.text()});
+  await parse({files:fs});e.target.value='';
+};
+$('clear').onclick=()=>{comps=[];renderC()};
+
+async function parse(body){const {ok,j}=await J('/api/parse',body);if(!ok){alert(j.error);return}addRows(j.compounds)}
+$('addtxt').onclick=async()=>{const t=$('lib').value;if(!t.trim())return;await parse({text:t});$('lib').value=''};
+$('ex').onclick=async()=>{const t=(await J('/api/example')).j.library;await parse({text:t})};
+$('files').onchange=async e=>{const fs=[];for(const f of e.target.files)fs.push({name:f.name,text:await f.text()});await parse({files:fs});e.target.value=''};
+$('clear').onclick=()=>{comps=[];renderC()};
+function mkViewer(id){const el=$(id);el.innerHTML='';return $3Dmol.createViewer(el,{backgroundColor:'#0a0f1e'})}
+const $3Dmol=window['$3Dmol']||window['3Dmol'];
+let pdbExample=false;
+function pdbBody(){const b={pdb:$('pdb').value};if(pdbText)b.pdb_text=pdbText;else if(pdbExample&&$('pdb').value.toUpperCase()==='3PTB')b.pdb='example';return b}
+async function inspect(){
+  $('chbox').textContent='Loading structure...';$('sug').innerHTML='';
+  const f=$('pdbfile').files[0];pdbText=f?await f.text():null;
+  const {ok,j}=await J('/api/inspect',pdbBody());
+  if(!ok){$('chbox').innerHTML='<div class="alert a-bad">'+esc(j.error||'Could not read the structure')+'</div>';cinfo=null;return}
+  cinfo=j;chains=[];structCache=null;drawChains();showSug();
+  if(j.ligands.length&&!$('lig').value)$('lig').value=j.ligands[0].res;
+}
+function showSug(){
+  const s=cinfo.suggestion;if(!s)return;
+  $('sug').innerHTML=`<div class="sug"><b>Suggested chain(s): ${esc(s.chains.join(', '))}</b><br>${esc(s.reason)}<br>This is a rule-based suggestion (sequence comparison and ligand contacts), not an AI decision. It is applied only when you confirm.<div style="margin-top:8px"><button class="btn" id="usesug" type="button">Use the suggestion</button></div></div>`;
+  $('usesug').onclick=()=>{chains=[...s.chains];drawChains();loadView1()};
+}
+function drawChains(){
+  const j=cinfo;if(!j)return;
+  let h=`<b>${esc(j.label)}</b> ${esc(j.title)}<br>`+(j.chains.length>1?'<span style="color:var(--warn)">Several chains. Tick the chain(s) to use; nothing is applied until you confirm.</span>':'Single chain.');
+  h+='<table class="ch"><tr><th>Use</th><th>Chain</th><th>Residues</th><th>Atoms</th></tr>'+j.chains.map(c=>`<tr><td><input type="checkbox" data-c="${c.id}" ${chains.includes(c.id)?'checked':''}></td><td>${esc(c.id)}</td><td>${c.residues}</td><td>${c.atoms}</td></tr>`).join('')+'</table>';
+  if(j.ligands.length)h+='Bound ligands (protein residues within 4 &Aring; per chain):<br>'+j.ligands.map(l=>`${esc(l.res)} ${esc(l.chain)}${esc(l.num)} (${l.heavy_atoms} heavy atoms): `+Object.entries(l.contacts).map(([k,v])=>`${esc(k)}: ${v}`).join(', ')).join('<br>');
+  $('chbox').innerHTML=h;
+  document.querySelectorAll('[data-c]').forEach(b=>b.onchange=()=>{const id=b.dataset.c;chains=b.checked?[...chains,id]:chains.filter(x=>x!==id);loadView1()});
+  if(j.chains.length===1&&!chains.length){chains=[j.chains[0].id];drawChains();loadView1()}
+}
+async function structure(){
+  const {ok,j}=await J('/api/structure',{...pdbBody(),chains});if(!ok)throw new Error(j.error);return j.pdb}
+async function loadView1(){
+  if(!chains.length){$('v1').classList.add('hide');return}
+  $('v1').classList.remove('hide');v1=mkViewer('v1');const t=await structure();structCache=t;
+  v1.addModel(t,'pdb');const cols=['#7aa2ff','#ffb86b','#7be0b0','#e58cff'];
+  chains.forEach((c,i)=>v1.setStyle({chain:c,hetflag:false},{cartoon:{color:cols[i%4],opacity:.85}}));
+  v1.setStyle({hetflag:true},{stick:{radius:.2}});v1.zoomTo();v1.render()}
+$('insp').onclick=inspect;$('pdb').oninput=()=>{pdbExample=false;cinfo=null;chains=[];$('chbox').textContent='';$('sug').innerHTML=''};$('pdbfile').onchange=()=>{cinfo=null;chains=[];$('chbox').textContent=''};
+async function loadExample(){
+  pdbText=null;$('pdb').value='';const r=await J('/api/inspect',{pdb:'example'});cinfo=r.j;chains=['A'];$('pdb').value='3PTB';pdbText=null;
+  pdbExample=true;structCache=null;drawChains();$('sug').innerHTML='';$('lig').value='BEN';comps=[];const t=(await J('/api/example')).j.library;await parse({text:t});loadView1();
+}
+function pbody(){return pdbBody()}
+$('exall').onclick=async()=>{await loadExample();goto('p1')};
+$('exall2').onclick=async()=>{await loadExample();goto('p4')};
+// ---------- step 3 box
+document.querySelectorAll('#bm .pill').forEach(p=>p.onclick=()=>{boxM=p.dataset.m;document.querySelectorAll('#bm .pill').forEach(x=>x.classList.toggle('on',x===p));
+ ['cocrystal','residues','pocket','manual'].forEach(m=>$('bm_'+m).classList.toggle('hide',m!==boxM));if(boxM==='pocket')loadPockets();drawV3()});
+async function enterP3(){
+  if(!cinfo||!chains.length){$('boxinfo').innerHTML='<span style="color:var(--warn)">Go to step 1 first: load the protein and choose the chain(s).</span>';return}
+  if(!structCache)structCache=await structure();drawV3()}
+function drawV3(boxData){
+  if(!structCache)return;v3=mkViewer('v3');v3.addModel(structCache,'pdb');
+  v3.setStyle({hetflag:false},{cartoon:{color:'#8a97b8',opacity:.75}});v3.setStyle({hetflag:true},{stick:{radius:.22,colorscheme:'greenCarbon'}});
+  if(boxM==='residues'){
+    selRes.forEach(k=>{const [c,n]=k.split(':');v3.addStyle({chain:c,resi:+n,hetflag:false},{stick:{radius:.2,color:'#ffd24a'}})});
+    v3.setClickable({hetflag:false},true,a=>{const k=a.chain+':'+a.resi;selRes.has(k)?selRes.delete(k):selRes.add(k);showRes();drawV3()});
+  }
+  if(boxData){const [x,y,z]=boxData.center,[a,b,c]=boxData.size;v3.addBox({center:{x,y,z},dimensions:{w:a,h:b,d:c},color:'#2ecc9a',opacity:.18});v3.addBox({center:{x,y,z},dimensions:{w:a,h:b,d:c},color:'#2ecc9a',wireframe:true})}
+  v3.zoomTo();v3.render()}
+function showRes(){$('selres').innerHTML=[...selRes].map(k=>`<span class="pill on" data-k="${k}">${esc(k)} &times;</span>`).join('')||'<span class="note">No residues selected.</span>';
+ document.querySelectorAll('#selres .pill').forEach(p=>p.onclick=()=>{selRes.delete(p.dataset.k);showRes();drawV3()})}
+$('clrres').onclick=()=>{selRes.clear();showRes();drawV3()};showRes();
+async function loadPockets(){
+  $('pklist').innerHTML='Searching...';const {ok,j}=await J('/api/pockets',{...pbody(),chains});
+  if(!ok){$('pklist').innerHTML='<div class="alert a-bad">'+esc(j.error)+'</div>';return}
+  $('pklist').innerHTML=j.pockets.length?j.pockets.map(p=>`<div class="pk ${p.rank===pockIdx?'on':''}" data-r="${p.rank}"><b>Pocket ${p.rank}</b> | volume about ${p.volume_A3} &Aring;&sup3; | centre ${p.center.join(', ')}<br>Lining residues (${p.n_residues}): ${esc(p.residues.slice(0,14).join(' '))}${p.n_residues>14?' ...':''}</div>`).join(''):'No pockets found.';
+  document.querySelectorAll('.pk').forEach(e=>e.onclick=()=>{pockIdx=+e.dataset.r;document.querySelectorAll('.pk').forEach(x=>x.classList.toggle('on',x===e));previewBox()})}
+function boxPayload(){
+  const b={...pbody(),chains,method:boxM,ligand_id:$('lig').value};
+  if(boxM==='residues')b.residues=[...selRes];if(boxM==='pocket')b.pocket_index=pockIdx;
+  if(boxM==='manual'){b.center=$('mc').value.split(/[ ,;]+/).filter(Boolean);b.size=$('ms').value.split(/[ ,;]+/).filter(Boolean)}
+  return b}
+async function previewBox(){
+  if(!chains.length){alert('Choose the protein chain(s) in step 1 first.');return}
+  const {ok,j}=await J('/api/box',boxPayload());
+  if(!ok){$('boxinfo').innerHTML='<div class="alert a-bad">'+esc(j.error)+'</div>';return}
+  boxRes=j;$('boxinfo').innerHTML=`Box centre ${j.center.join(', ')} | size ${j.size.join(' x ')} &Aring;`+(j.note?`<br><span style="color:var(--warn)">${esc(j.note)}</span>`:'');drawV3(j)}
+$('prevbox').onclick=previewBox;
+// ---------- step 4
+function summary(){
+  const ok=comps.filter(c=>c.level!=='reject').length;
+  $('summary').innerHTML=`Protein: <b>${cinfo?esc(cinfo.label):'not loaded'}</b>, chain(s) <b>${chains.join(', ')||'none'}</b><br>Compounds: <b>${ok}</b><br>Box method: <b>${boxM}</b><br>Exhaustiveness: <b id="exhs">...</b> (change in Settings)`;
+  J('/api/settings').then(r=>$('exhs').textContent=r.j.settings.exhaustiveness)}
+$('go').onclick=async()=>{
+  $('errbox').classList.add('hide');
+  if(!cinfo){alert('Load a protein in step 1 first.');goto('p1');return}
+  if(!chains.length){alert('Choose at least one protein chain in step 1.');goto('p1');return}
+  if(!comps.filter(c=>c.level!=='reject').length){alert('Add at least one compound in step 2.');goto('p2');return}
+  if(comps.some(c=>c.level==='warn'&&!c.accepted)){alert('Some compounds have warnings. Review them in step 2, then accept or remove them.');goto('p2');return}
+  const b={...pbody(),chains,ligand_id:$('lig').value,ref_smiles:$('ref').value,allow_unvalidated:$('unv').checked,box_method:boxM,compounds:comps.filter(c=>c.level!=='reject')};
+  if(boxM==='residues')b.residues=[...selRes];if(boxM==='pocket')b.pocket_index=pockIdx;
+  if(boxM==='manual'){const x=boxPayload();b.box_center=x.center;b.box_size=x.size}
+  const {ok,j}=await J('/api/run',b);if(!ok){showErr(j.error);return}
+  startPoll(j.id)};
+function startPoll(id){jid=id;$('go').disabled=true;$('stop').classList.remove('hide');clearInterval(timer);timer=setInterval(poll,1500);poll()}
+function showErr(m){$('errbox').classList.remove('hide');$('errbox').textContent=m}
+$('stop').onclick=()=>J('/api/cancel',{id:jid});
+async function poll(){
+  const {j:s}=await J('/api/status?id='+jid);
+  const pct=s.total?Math.round(100*s.done/s.total):0;$('pb').style.width=(s.state==='finished'?100:pct)+'%';
+  const m={running:['b-run','Running'],finished:['b-ok','Finished'],failed:['b-bad','Failed / stopped'],cancelled:['b-warn','Stopped']}[s.state];
+  $('st').className='badge '+m[0];$('st').textContent=m[1];
+  $('pt').textContent=`${s.target} | compounds: ${s.done}/${s.total} | ${s.elapsed} s`;
+  const L=$('log');L.textContent=s.log.join('\n')||'-';L.scrollTop=L.scrollHeight;
+  if(s.state!=='running'){clearInterval(timer);$('go').disabled=false;$('stop').classList.add('hide');
+   if(s.state==='failed')showErr(s.friendly||'The run stopped with an error. Open the technical log below.');
+   await show();if(s.state==='finished')goto('p5')}
+  else if(s.state==='running'&&pct===0&&s.log.some(l=>l.includes('validating')))$('pt').textContent+=' | validating...'}
+async function show(){
+  const {j:r}=await J('/api/results?id='+jid);const v=r.validation;
+  if(r.selftest){const ok=v&&v.protocol_validated;$('stres').innerHTML=ok?`<div class="alert a-ok">Stability check passed: known protein 3PTB, re-docking RMSD ${v.redock_top_rmsd} &Aring; (limit 2). Vina: ${esc((await J('/api/about')).j.vina)}.</div>`:'<div class="alert a-bad">Stability check FAILED. Do not use the program for real work until this is fixed. Send the technical log to your instructor.</div>'}
+  if(!v&&!r.ranked.length)return;
+  $('noresult').classList.add('hide');$('resbody').classList.remove('hide');
+  let h='';
+  if(v){ if(v.protocol_validated) h=`<div class="alert a-ok">Validation passed: re-docking RMSD = ${v.redock_top_rmsd} &Aring; (limit 2 &Aring;).</div>`;
+   else h=`<div class="alert a-bad">Validation did not pass or was not possible. ${r.ranked.length?'These results are exploratory (UNVALIDATED).':'Docking stopped before ranking compounds.'} ${esc(v.validation_note||'')}</div>`;
+   if(v.box_note)h+=`<div class="alert a-warn">${esc(v.box_note)}</div>`}
+  $('valbox').innerHTML=h;
+  $('kv').innerHTML=v?`<div><b>${esc(v.target)}</b><span>Target</span></div><div><b>${v.redock_top_rmsd??'-'}</b><span>RMSD (&Aring;)</span></div><div><b>${r.ranked.length}</b><span>Compounds ranked</span></div>`:'';
+  const cols=['rank','compound','vina','score','le','key_recovery','polar_contacts','clashes'];
+  const names={rank:'Rank',compound:'Compound',vina:'Vina (kcal/mol)',score:'Composite',le:'LE',key_recovery:'Key-res.',polar_contacts:'Polar',clashes:'Clashes'};
+  $('tbl').innerHTML=r.ranked.length?'<tr>'+cols.map(c=>`<th>${names[c]}</th>`).join('')+'</tr>'+r.ranked.map(x=>'<tr data-c="'+esc(x.compound)+'" data-p="'+x.pose+'">'+cols.map(c=>`<td class="${c=='vina'?'sc':''}">${esc(x[c]??'')}</td>`).join('')+'</tr>').join(''):'';
+  document.querySelectorAll('#tbl tr[data-c]').forEach(tr=>tr.onclick=()=>{document.querySelectorAll('#tbl tr').forEach(x=>x.classList.remove('sel'));tr.classList.add('sel');openComp(tr.dataset.c,+tr.dataset.p)});
+  $('zip').href='/api/zip?id='+jid;$('fcsv').href='/api/file?id='+jid+'&name=ranked.csv';$('fpdb').href='/api/file?id='+jid+'&name=best_poses.pdb';$('frep').href='/api/file?id='+jid+'&name=report.md';
+  poseData=(await J('/api/poses?id='+jid)).j;recText=await (await fetch('/api/receptor?id='+jid)).text();
+  if(r.ranked.length){const f=document.querySelector('#tbl tr[data-c]');if(f)f.click()}
+}
+async function openComp(c,p){curComp=c;curPose=p;$('vt').textContent=c;
+  const ps=poseData[c]||[];$('poselist').innerHTML=ps.map(x=>`<span class="pill ${x.pose===curPose?'on':''}" data-p="${x.pose}">Pose ${x.pose} | ${x.vina.toFixed(2)}</span>`).join('');
+  document.querySelectorAll('#poselist .pill').forEach(e=>e.onclick=()=>openComp(c,+e.dataset.p));
+  const {ok,j}=await J(`/api/diagram?id=${jid}&compound=${encodeURIComponent(c)}&pose=${p}`);
+  if(ok){diagData=j;$('d2').innerHTML=j.svg;const n={};j.interactions.forEach(i=>n[i.type]=(n[i.type]||0)+1);
+   $('inote').textContent='Detected: '+(Object.entries(n).map(([k,v])=>v+' '+k).join(', ')||'no interactions')+'. Rule-based geometry (distance cut-offs, no hydrogen-bond angle check); a guide, not proof.'}
+  else $('d2').innerHTML='<div class="note" style="padding:20px;color:#555">'+esc(j.error||'')+'</div>';
+  draw5(ps.find(x=>x.pose===p))}
+function draw5(ent){
+  v5=mkViewer('v5');v5.addModel(recText,'pdb');v5.setStyle({},{cartoon:{color:'#9aa4bf',opacity:.3}});
+  if(!ent){v5.render();return}
+  const m=v5.addModel(ent.pdb,'pdb');v5.setStyle({model:m},{stick:{radius:.17,colorscheme:'greenCarbon'}});
+  const near={within:{distance:4.5,sel:{model:m}}};
+  v5.addStyle({model:0,byres:true,...near},{stick:{radius:.07,colorscheme:'whiteCarbon'}});
+  if(diagData)diagData.interactions.filter(i=>i.type==='hbond').forEach(i=>{const a=i.lpos,b=i.ppos;
+   v5.addCylinder({start:{x:a[0],y:a[1],z:a[2]},end:{x:b[0],y:b[1],z:b[2]},radius:.05,color:'yellow',dashed:true,fromCap:1,toCap:1});
+   v5.addLabel(i.dist.toFixed(1),{position:{x:(a[0]+b[0])/2,y:(a[1]+b[1])/2,z:(a[2]+b[2])/2},backgroundOpacity:.5,fontSize:11,fontColor:'#ffe36b',backgroundColor:'#000'})});
+  if($('surf').checked)v5.addSurface($3Dmol.SurfaceType.VDW,{opacity:.25,color:'#cfd8ff'},{model:0,...near},{model:m});
+  v5.zoomTo({model:m});v5.zoom(.55);v5.render()}
+$('surf').onchange=()=>draw5((poseData[curComp]||[]).find(x=>x.pose===curPose));
+function dl(name,blob){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click()}
+$('png3d').onclick=()=>{if(!v5)return;fetch(v5.pngURI()).then(r=>r.blob()).then(b=>dl((curComp||'pose')+'_3D.png',b))};
+$('posepdb').onclick=()=>{const e=(poseData[curComp]||[]).find(x=>x.pose===curPose);if(e)dl(curComp+'_pose'+curPose+'.pdb',new Blob([e.pdb]))};
+$('svgdl').onclick=()=>{if(diagData)dl((curComp||'diagram')+'_2D.svg',new Blob([diagData.svg],{type:'image/svg+xml'}))};
+$('pngdl').onclick=()=>{if(!diagData)return;const img=new Image();img.onload=()=>{const c=document.createElement('canvas');c.width=1800;c.height=1520;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(img,0,0,c.width,c.height);c.toBlob(b=>dl((curComp||'diagram')+'_2D.png',b))};img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(diagData.svg)};
+// ---------- guide/selftest
+$('selftest').onclick=async()=>{$('stres').innerHTML='Running the known-protein check (3PTB redock, about 1-2 minutes)...';const {ok,j}=await J('/api/selftest',{});if(!ok){$('stres').innerHTML='<div class="alert a-bad">'+esc(j.error)+'</div>';return}startPoll(j.id)};
+// ---------- settings/about
+const SL={exhaustiveness:'Exhaustiveness (search effort, 1-128)',num_poses:'Poses per compound (1-20)',seed:'Random seed (same seed = same result)',cpu:'CPU cores (0 = all)',scoring:'Scoring function (vina or vinardo)',energy_range:'Energy range (kcal/mol)',min_rmsd:'Minimum RMSD between poses (A)',padding:'Box padding around the site (A)',min_box:'Minimum box size (A)',max_box:'Maximum box size (A)',rmsd_cutoff:'Validation RMSD limit (A)',ph:'Protein pH for hydrogens',vina_path:'Vina program path (empty = bundled)'};
+const SH={exhaustiveness:'Higher = slower, more thorough. 8 is the Vina default; use 32 or more for final runs.'};
+let setLimits={};
+async function loadSettings(){const {j}=await J('/api/settings');setLimits=j.limits;
+  $('setgrid').innerHTML=Object.keys(j.defaults).map(k=>`<div><label>${SL[k]}</label><input data-s="${k}" value="${esc(j.settings[k])}">${SH[k]?`<div class="hint">${SH[k]}</div>`:''}</div>`).join('')}
+$('saveset').onclick=async()=>{const b={};document.querySelectorAll('[data-s]').forEach(i=>b[i.dataset.s]=i.value);const {ok,j}=await J('/api/settings',b);$('setmsg').innerHTML=ok?'<span style="color:var(--ok)">Saved.</span>':'<span style="color:var(--bad)">'+esc(j.error)+'</span>'};
+$('resetset').onclick=async()=>{const {j}=await J('/api/settings');await J('/api/settings',j.defaults);loadSettings();$('setmsg').textContent='Defaults restored.'};
+$('upd').onclick=async()=>{$('updres').textContent='Checking...';const {j}=await J('/api/update-check');
+  $('updres').innerHTML=j.error?esc(j.error)+` You have version ${esc(j.current)}.`:j.newer?`New version ${esc(j.latest)} available (you have ${esc(j.current)}). <a href="${esc(j.url)}" target="_blank" style="color:var(--ac)">Open release page</a>${j.download?` | <a href="${esc(j.download)}" target="_blank" style="color:var(--ac)">Download</a>`:''}<br><pre>${esc(j.notes||'')}</pre>`:`You have the latest version (${esc(j.current)}).`};
+async function loadAbout(){const {j}=await J('/api/about');
+  $('aboutbody').innerHTML=`<p><b>${esc(j.app)}</b> version ${esc(j.version)}<br>Vina: ${esc(j.vina)}<br>Python ${esc(j.python)}; `+Object.entries(j.libs||{}).map(([k,v])=>esc(k)+' '+esc(v)).join(', ')+`</p><pre style="max-height:none">${esc(j.about_md)}</pre>`}
+J('/api/about').then(r=>$('verlbl').textContent='v'+r.j.version);
+</script></body></html>

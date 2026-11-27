@@ -1,0 +1,61 @@
+name: Build Windows app
+# Manual only: one build per release. Never triggers on push.
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag, for example v1.0.0 (leave empty to only build)"
+        required: false
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unpack source tree (first run only)
+        shell: bash
+        run: |
+          if [ -f src.zip ]; then
+            unzip -oq src.zip && rm src.zip
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add -A
+            git commit -m "Add source tree v1.0.0"
+            git push
+          fi
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - run: pip install -r requirements-build.txt
+      - name: Get official Vina 1.2.7 for Windows
+        shell: bash
+        run: |
+          mkdir -p bin
+          curl -sL -o bin/vina_1.2.7_win.exe https://github.com/ccsb-scripps/AutoDock-Vina/releases/download/v1.2.7/vina_1.2.7_win.exe
+          ./bin/vina_1.2.7_win.exe --version
+      - name: Build folder version
+        run: pyinstaller --noconfirm avw.spec
+      - name: Self-test on Windows (redock 3PTB)
+        run: dist\AbdulwahhabVinaWorkflow\AbdulwahhabVinaWorkflow.exe --selftest
+      - name: Zip folder version
+        shell: pwsh
+        run: Compress-Archive -Path dist\AbdulwahhabVinaWorkflow -DestinationPath AbdulwahhabVinaWorkflow-windows.zip
+      - name: Build single-file version
+        env: { AVW_ONEFILE: "1" }
+        run: |
+          Remove-Item -Recurse -Force build
+          pyinstaller --noconfirm --distpath dist1 avw.spec
+      - name: Self-test single file
+        run: dist1\AbdulwahhabVinaWorkflow.exe --selftest
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AbdulwahhabVinaWorkflow
+          path: |
+            AbdulwahhabVinaWorkflow-windows.zip
+            dist1/AbdulwahhabVinaWorkflow.exe
+      - name: Publish release
+        if: ${{ inputs.tag != '' }}
+        shell: bash
+        env: { GH_TOKEN: "${{ github.token }}" }
+        run: gh release create "${{ inputs.tag }}" AbdulwahhabVinaWorkflow-windows.zip dist1/AbdulwahhabVinaWorkflow.exe --draft --title "${{ inputs.tag }}" --notes "Windows build (draft). Self-test passed on the build runner. Not yet tested on a real Windows PC."

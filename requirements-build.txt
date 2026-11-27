@@ -1,0 +1,8 @@
+rdkit==2026.9.2
+meeko==0.8.0
+openbabel-wheel==3.1.1.23
+numpy>=2.0
+scipy>=1.13
+gemmi==0.7.5
+pywebview>=5.0
+pyinstaller>=6.0

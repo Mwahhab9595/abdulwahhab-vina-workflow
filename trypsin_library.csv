@@ -1,0 +1,7 @@
+name,smiles
+Benzamidine,NC(=N)c1ccccc1
+4-Aminobenzamidine,NC(=N)c1ccc(N)cc1
+Pentamidine,NC(=N)c1ccc(OCCCCCOc2ccc(cc2)C(N)=N)cc1
+Caffeine,Cn1cnc2c1c(=O)n(C)c(=O)n2C
+Ibuprofen,CC(C)Cc1ccc(cc1)C(C)C(=O)O
+Benzene sulfonamide,NS(=O)(=O)c1ccccc1
